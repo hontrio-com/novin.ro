@@ -104,6 +104,12 @@
 @endpush
 
 @section('content')
+@if(app()->environment('local'))
+<div style="background:#fef9c3;border-bottom:1px solid #fde68a;padding:10px 24px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:#a16207;">
+    <svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    🧪 TEST MODE — Stripe ocolit, auditul pornește direct
+</div>
+@endif
 <div class="progress-page">
     <div class="pp-left">
         <div class="pp-left-inner">
@@ -174,6 +180,8 @@
             const d = await r.json();
             if (d.status === 'completed' && d.redirect) {
                 clearInterval(poll); clearInterval(timer);
+                // Dezactiveaza protectia inainte de redirect
+                window._auditDone = true;
                 steps.forEach(id => { const el = document.getElementById(id); el.classList.remove('active'); el.classList.add('done'); });
                 document.getElementById('ppFill').style.width = '100%';
                 document.getElementById('pctLbl').textContent = '100%';
@@ -181,12 +189,38 @@
             }
             if (d.status === 'failed') {
                 clearInterval(poll); clearInterval(timer);
+                window._auditDone = true;
                 document.querySelector('.pp-title').textContent = 'A aparut o eroare';
-                document.querySelector('.pp-url-badge').textContent = 'Contacteaza-ne: contact@inovex.ro';
+                document.querySelector('.pp-url-badge').textContent = 'Contacteaza-ne: contact@@novin.ro';
                 document.querySelector('.pp-live-dot').style.background = 'var(--red)';
             }
         } catch(e) {}
     }, 4000);
+
+    // ── Protectie refresh/inchidere tab ──────────────────────
+    window._auditDone = false;
+    window.addEventListener('beforeunload', function(e) {
+        if (!window._auditDone) {
+            e.preventDefault();
+            e.returnValue = 'Auditul este in curs de procesare. Daca pleci, auditul va continua in fundal si poti reveni la el din Dashboard.';
+            return e.returnValue;
+        }
+    });
+
+    // Daca userul revine dupa ce a plecat din tab, reiau polling-ul
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible' && !window._auditDone) {
+            // Verific imediat statusul la revenire
+            fetch('/api/audit/{{ $audit->id }}/status')
+                .then(r => r.json())
+                .then(d => {
+                    if (d.status === 'completed' && d.redirect) {
+                        window._auditDone = true;
+                        window.location.href = d.redirect;
+                    }
+                }).catch(() => {});
+        }
+    });
 })();
 </script>
 @endpush

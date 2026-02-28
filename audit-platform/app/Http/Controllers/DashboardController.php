@@ -17,14 +17,84 @@ class DashboardController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $completed = $audits->where('status', 'completed');
+
         $stats = [
-            'total'    => $audits->count(),
-            'avg_score'=> $audits->where('status', 'completed')->avg('score_total') ?? 0,
-            'critical' => $audits->sum(fn($a) => $a->issues->where('severity', 'critical')->count()),
-            'last_audit'=> $audits->first()?->created_at?->diffForHumans() ?? 'Niciodata',
+            'total'      => $audits->count(),
+            'avg_score'  => round($completed->avg('score_total') ?? 0),
+            'critical'   => $audits->sum(fn($a) => $a->issues->where('severity', 'critical')->count()),
+            'last_audit' => $audits->first()?->created_at?->diffForHumans() ?? 'Niciodată',
+            'best_score' => $completed->max('score_total') ?? 0,
+            'improved'   => $completed->count() >= 2
+                ? ($completed->first()->score_total - $completed->skip(1)->first()->score_total)
+                : null,
         ];
 
-        return view('dashboard.index', compact('user', 'audits', 'stats'));
+        // Evoluție scoruri — ultimele 8 audituri completate (cronologic)
+        $trend = $completed
+            ->sortBy('created_at')
+            ->values()
+            ->slice(-8)
+            ->map(fn($a) => [
+                'date'  => $a->created_at->format('d.m'),
+                'score' => $a->score_total ?? 0,
+                'url'   => $a->url,
+                'token' => $a->public_token,
+            ])
+            ->values();
+
+        // Comparație ultimele 2 audituri completate
+        $latest  = $completed->first();
+        $prev    = $completed->skip(1)->first();
+        $compare = null;
+        if ($latest && $prev) {
+            $cats = ['technical','seo','legal','eeeat','content','ux'];
+            $labels = ['technical'=>'Tehnic','seo'=>'SEO','legal'=>'Legal','eeeat'=>'E-E-A-T','content'=>'Conținut','ux'=>'UX'];
+            $compare = collect($cats)->map(fn($k) => [
+                'key'    => $k,
+                'label'  => $labels[$k],
+                'latest' => $latest->{"score_{$k}"} ?? 0,
+                'prev'   => $prev->{"score_{$k}"}   ?? 0,
+                'delta'  => ($latest->{"score_{$k}"} ?? 0) - ($prev->{"score_{$k}"} ?? 0),
+            ])->values();
+        }
+
+        // Quick Wins din cel mai recent audit
+        $quickWins = collect();
+        if ($latest) {
+            $effortScore = function($issue): int {
+                $t = mb_strtolower($issue->title);
+                if (str_contains($t, 'meta description'))  return 1;
+                if (str_contains($t, 'canonical'))         return 1;
+                if (str_contains($t, 'twitter'))           return 1;
+                if (str_contains($t, 'x-frame'))           return 1;
+                if (str_contains($t, 'imagini fără'))      return 1;
+                if (str_contains($t, 'title prea'))        return 1;
+                if (str_contains($t, 'robots.txt'))        return 1;
+                if (str_contains($t, 'open graph'))        return 2;
+                if (str_contains($t, 'sitemap'))           return 2;
+                if (str_contains($t, 'google analytics'))  return 2;
+                if (str_contains($t, 'lcp'))               return 4;
+                if (str_contains($t, 'mobile'))            return 4;
+                return 3;
+            };
+            $quickWins = $latest->issues
+                ->filter(fn($i) => $i->severity !== 'info')
+                ->map(fn($i) => [
+                    'issue' => $i,
+                    'score' => round(
+                        match($i->severity) {'critical'=>3,'warning'=>2,default=>1}
+                        / $effortScore($i), 2
+                    ),
+                ])
+                ->sortByDesc('score')
+                ->take(3)
+                ->values();
+        }
+
+        return view('dashboard.index', compact(
+            'user', 'audits', 'stats', 'trend', 'compare', 'latest', 'prev', 'quickWins'
+        ));
     }
 
     public function settings()

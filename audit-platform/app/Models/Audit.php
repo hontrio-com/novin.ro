@@ -15,6 +15,7 @@ class Audit extends Model
         'email',
         'status',
         'public_token',
+        'raw_data',
         'score_total',
         'score_technical',
         'score_seo',
@@ -29,6 +30,7 @@ class Audit extends Model
     protected $casts = [
         'completed_at'           => 'datetime',
         'ai_summary_generated_at'=> 'datetime',
+        'raw_data'               => 'array',
     ];
 
     public function user(): BelongsTo

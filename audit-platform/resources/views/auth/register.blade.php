@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Creeaza cont — Inovex Audit</title>
+<title>Creeaza cont — NOVIN.RO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -68,7 +68,7 @@ body { font-family: var(--font); background: var(--paper); color: var(--ink); li
 .left-foot { font-size: 11px; color: rgba(255,255,255,.16); }
 
 /* RIGHT */
-.right { flex: 1; display: flex; align-items: center; justify-content: center; padding: 48px; }
+.right { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px; }
 .box { width: 100%; max-width: 380px; animation: fadeUp .45s var(--ease) both; }
 
 .box-title { font-size: 24px; font-weight: 800; color: var(--ink); letter-spacing: -.8px; margin-bottom: 5px; }
@@ -106,7 +106,7 @@ body { font-family: var(--font); background: var(--paper); color: var(--ink); li
 .pw-lbl { font-size: 10px; color: var(--ink-5); margin-left: 4px; min-width: 44px; }
 
 /* Terms */
-.terms { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; color: var(--ink-4); line-height: 1.5; margin-bottom: 18px; cursor: pointer; }
+.terms { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; color: var(--ink-4); line-height: 1.5; margin-bottom: 18px; }
 .terms input { width: 15px; height: 15px; accent-color: var(--blue); cursor: pointer; flex-shrink: 0; margin-top: 2px; }
 .terms a { color: var(--blue); text-decoration: none; }
 .terms a:hover { text-decoration: underline; }
@@ -121,11 +121,28 @@ body { font-family: var(--font); background: var(--paper); color: var(--ink); li
 .foot { text-align: center; margin-top: 20px; font-size: 13px; color: var(--ink-5); }
 .foot a { color: var(--ink-3); text-decoration: none; font-weight: 500; }
 .foot a:hover { color: var(--ink); }
+.btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 44px; background: var(--paper); border: 1.5px solid var(--rule); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--ink-3); text-decoration: none; transition: border-color .15s, background .15s, box-shadow .15s; margin-bottom: 16px; }
+.btn-google:hover { border-color: var(--ink-6); background: var(--paper-2); box-shadow: 0 2px 8px rgba(0,0,0,.06); color: var(--ink); }
+.divider { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+.divider span { font-size: 11px; color: var(--ink-5); font-weight: 500; white-space: nowrap; }
 
 @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-@media (max-width: 900px) { .left { display: none; } .right { padding: 32px 24px; } }
-@media (max-width: 480px) { .right { padding: 24px 20px; align-items: flex-start; padding-top: 52px; } }
+.mobile-logo { display: none; }
+@media (max-width: 900px) {
+    .left { display: none; }
+    .right { padding: 40px 24px 32px; flex-direction: column; align-items: center; justify-content: flex-start; }
+    .mobile-logo {
+        display: flex; align-items: center; justify-content: center;
+        flex-direction: column; gap: 6px;
+        margin-bottom: 36px; text-align: center; width: 100%;
+    }
+    .mobile-logo img { height: 48px; width: auto; display: block; }
+    .mobile-logo-name { font-size: 18px; font-weight: 800; color: var(--ink); letter-spacing: -.5px; margin-top: 4px; }
+    .mobile-logo-sub { font-size: 11px; color: var(--ink-5); }
+}
+@media (max-width: 480px) { .right { padding: 36px 20px 28px; } }
 </style>
 </head>
 <body>
@@ -134,12 +151,18 @@ body { font-family: var(--font); background: var(--paper); color: var(--ink); li
     <!-- LEFT -->
     <div class="left">
         <div class="logo">
-            <div class="logo-mark">
-                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+            <div class="logo-mark" style="background:none;border:none;padding:0;width:auto;">
+                @if(file_exists(public_path('images/logo.png')))
+                    <img src="{{ asset('images/logo.png') }}" alt="NOVIN.RO" style="height:36px;width:auto;display:block;filter:brightness(0) invert(1);opacity:.9;">
+                @elseif(file_exists(public_path('images/logo.svg')))
+                    <img src="{{ asset('images/logo.svg') }}" alt="NOVIN.RO" style="height:36px;width:auto;display:block;filter:brightness(0) invert(1);opacity:.9;">
+                @else
+                    <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:white;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+                @endif
             </div>
             <div>
-                <div class="logo-name">Inovex Audit</div>
-                <div class="logo-sub">powered by AI</div>
+                <div class="logo-name">NOVIN.RO</div>
+                <div class="logo-sub">powered by Inovex.ro</div>
             </div>
         </div>
 
@@ -171,11 +194,20 @@ body { font-family: var(--font); background: var(--paper); color: var(--ink); li
             </div>
         </div>
 
-        <div class="left-foot">© {{ date('Y') }} Inovex.ro — Toate drepturile rezervate</div>
+        <div class="left-foot">© {{ date('Y') }} NOVIN.RO — Toate drepturile rezervate</div>
     </div>
 
     <!-- RIGHT -->
     <div class="right">
+            <div class="mobile-logo">
+                @if(file_exists(public_path('images/logo.png')))
+                    <img src="{{ asset('images/logo.png') }}" alt="NOVIN.RO">
+                @elseif(file_exists(public_path('images/logo.svg')))
+                    <img src="{{ asset('images/logo.svg') }}" alt="NOVIN.RO">
+                @endif
+                <div class="mobile-logo-name">NOVIN.RO</div>
+                <div class="mobile-logo-sub">powered by Inovex.ro</div>
+            </div>
         <div class="box">
             <div class="box-title">Creeaza cont</div>
             <div class="box-sub">Ai deja cont? <a href="{{ route('login') }}">Conecteaza-te</a></div>
@@ -189,6 +221,12 @@ body { font-family: var(--font); background: var(--paper); color: var(--ink); li
 
             <form method="POST" action="{{ route('register') }}">
                 @csrf
+
+                <a href="{{ route('auth.google') }}" class="btn-google">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    Continua cu Google
+                </a>
+                <div class="divider"><span>sau</span></div>
 
                 <div class="field">
                     <label class="lbl" for="name">Numele tau</label>
@@ -242,10 +280,10 @@ body { font-family: var(--font); background: var(--paper); color: var(--ink); li
                     </div>
                 </div>
 
-                <label class="terms">
-                    <input type="checkbox" name="terms" required/>
-                    Sunt de acord cu <a href="#" target="_blank">Termenii si Conditiile</a> si <a href="#" target="_blank">Politica de Confidentialitate</a>
-                </label>
+                <div class="terms">
+                    <input type="checkbox" id="terms" name="terms" required/>
+                    <label for="terms" style="cursor:pointer;">Sunt de acord cu <a href="/termeni-si-conditii" target="_blank">Termenii si Conditiile</a> si <a href="/politica-de-confidentialitate" target="_blank">Politica de Confidentialitate</a></label>
+                </div>
 
                 <button type="submit" class="submit">
                     Creeaza contul

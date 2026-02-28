@@ -1,9 +1,8 @@
-@extends('layouts.app')
-@section('title', 'NOVIN.RO - Audit Website AI | SEO, Viteza, GDPR, ANPC Romania')
-@section('meta_description', 'Audit complet al site-ului tau in mai putin de 60 de secunde. Analiza SEO, Core Web Vitals, GDPR, ANPC, securitate si UX. Raport PDF detaliat cu solutii concrete. 200 RON, fara abonament.')
-@section('meta_keywords', 'audit website romania, audit seo, audit viteza site, core web vitals romania, gdpr audit, anpc audit, optimizare seo romania, raport website ai, novin.ro')
-@section('canonical', url('/'))
-@push('schema')
+<?php $__env->startSection('title', 'NOVIN.RO - Audit Website AI | SEO, Viteza, GDPR, ANPC Romania'); ?>
+<?php $__env->startSection('meta_description', 'Audit complet al site-ului tau in mai putin de 60 de secunde. Analiza SEO, Core Web Vitals, GDPR, ANPC, securitate si UX. Raport PDF detaliat cu solutii concrete. 200 RON, fara abonament.'); ?>
+<?php $__env->startSection('meta_keywords', 'audit website romania, audit seo, audit viteza site, core web vitals romania, gdpr audit, anpc audit, optimizare seo romania, raport website ai, novin.ro'); ?>
+<?php $__env->startSection('canonical', url('/')); ?>
+<?php $__env->startPush('schema'); ?>
 <?php
 $_jsonLdService = json_encode([
     '@context' => 'https://schema.org',
@@ -37,9 +36,9 @@ $_jsonLdFaq = json_encode([
 ?>
 <script type="application/ld+json"><?php echo $_jsonLdService; ?></script>
 <script type="application/ld+json"><?php echo $_jsonLdFaq; ?></script>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
 /* ═══ HERO ═══ */
 .hero {
@@ -283,11 +282,11 @@ $_jsonLdFaq = json_encode([
     .trust-row { grid-template-columns: 1fr; }
 }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
-{{-- HERO --}}
+
 <section class="hero">
     <div class="hero-grid-bg"></div>
     <div class="hero-radial"></div>
@@ -324,23 +323,37 @@ $_jsonLdFaq = json_encode([
             <div class="form-card">
                 <div class="form-card-title">Auditeaza site-ul tau</div>
                 <div class="form-card-sub">Introduceti URL-ul si adresa de email pentru a incepe</div>
-                <form action="{{ route('audit.start') }}" method="POST">
-                    @csrf
+                <form action="<?php echo e(route('audit.start')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
                     <div class="form-group">
                         <label class="form-label" for="url">URL site</label>
                         <div class="input-wrap">
-                            <input type="url" id="url" name="url" class="form-input" placeholder="https://www.site-ul-tau.ro" required value="{{ old('url') }}"/>
+                            <input type="url" id="url" name="url" class="form-input" placeholder="https://www.site-ul-tau.ro" required value="<?php echo e(old('url')); ?>"/>
                             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
                         </div>
-                        @error('url')<p class="form-error">{{ $message }}</p>@enderror
+                        <?php $__errorArgs = ['url'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="form-error"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="email">Adresa email</label>
                         <div class="input-wrap">
-                            <input type="email" id="email" name="email" class="form-input" placeholder="tu@@firma-ta.ro" required value="{{ old('email') }}"/>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="tu@@firma-ta.ro" required value="<?php echo e(old('email')); ?>"/>
                             <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                         </div>
-                        @error('email')<p class="form-error">{{ $message }}</p>@enderror
+                        <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="form-error"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                     <button type="submit" class="btn-submit">
                         Porneste auditul · 200 RON
@@ -359,7 +372,7 @@ $_jsonLdFaq = json_encode([
     </div>
 </section>
 
-{{-- PROOF STRIP --}}
+
 <div class="proof-strip">
     <div class="proof-strip-inner">
         <div class="proof-stat"><div class="proof-stat-n">200+</div><div class="proof-stat-l">site-uri auditate</div></div>
@@ -370,7 +383,7 @@ $_jsonLdFaq = json_encode([
     </div>
 </div>
 
-{{-- WHAT WE CHECK --}}
+
 <section class="section" id="ce-verificam">
     <div class="wrap">
         <div class="section-header">
@@ -455,7 +468,7 @@ $_jsonLdFaq = json_encode([
     </div>
 </section>
 
-{{-- HOW IT WORKS --}}
+
 <section class="section section-alt" id="cum-functioneaza">
     <div class="wrap">
         <div class="how-grid">
@@ -501,7 +514,7 @@ $_jsonLdFaq = json_encode([
     </div>
 </section>
 
-{{-- WHAT YOU GET --}}
+
 <section class="dark-section">
     <div class="dark-inner wrap">
         <div>
@@ -546,7 +559,7 @@ $_jsonLdFaq = json_encode([
     </div>
 </section>
 
-{{-- PRICING --}}
+
 <section class="section" id="pret" style="text-align:center">
     <div class="wrap">
         <span class="section-kicker" data-reveal>Pret</span>
@@ -559,12 +572,13 @@ $_jsonLdFaq = json_encode([
                 <div style="font-size:52px;font-weight:800;letter-spacing:-3px;color:var(--ink);line-height:1;margin-bottom:6px">200 <span style="font-size:22px;font-weight:600;letter-spacing:-1px">RON</span></div>
                 <div style="font-size:13px;color:var(--ink-5);margin-bottom:28px">o singura plata, fara abonament</div>
                 <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:28px">
-                    @foreach(['Raport complet in browser in 60 secunde','23+ puncte verificate automat','Analiza continut prin AI','Rezumat AI cu pasi de rezolvare','PDF profesional pe email','Disponibil 30 de zile'] as $feat)
+                    <?php $__currentLoopData = ['Raport complet in browser in 60 secunde','23+ puncte verificate automat','Analiza continut prin AI','Rezumat AI cu pasi de rezolvare','PDF profesional pe email','Disponibil 30 de zile']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $feat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-3)">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        {{ $feat }}
+                        <?php echo e($feat); ?>
+
                     </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
                 <button onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'})" class="btn btn-dark btn-lg" style="width:100%;justify-content:center">
                     Porneste auditul acum
@@ -575,7 +589,7 @@ $_jsonLdFaq = json_encode([
     </div>
 </section>
 
-{{-- FAQ --}}
+
 <section class="section section-alt" id="intrebari">
     <div class="wrap" style="text-align:center">
         <span class="section-kicker" data-reveal>Intrebari frecvente</span>
@@ -609,7 +623,7 @@ $_jsonLdFaq = json_encode([
     </div>
 </section>
 
-{{-- FINAL CTA --}}
+
 <div class="final-cta">
     <div class="final-cta-inner" data-reveal>
         <h2>Gata sa afli adevarul<br>despre site-ul tau?</h2>
@@ -624,9 +638,9 @@ $_jsonLdFaq = json_encode([
     </div>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 // Demo bars animate on scroll
 (function(){
@@ -652,4 +666,5 @@ document.querySelectorAll('.faq-btn').forEach(btn => {
     });
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\iorda\Desktop\audit_inovex\audit-platform\resources\views/layouts/app.blade.php ENDPATH**/ ?>

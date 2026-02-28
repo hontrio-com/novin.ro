@@ -8,7 +8,7 @@ class AuditIssue extends Model
 {
     protected $fillable = [
         'audit_id', 'category', 'severity',
-        'title', 'description', 'suggestion', 'affected_url',
+        'title', 'description', 'suggestion', 'affected_url', 'impact',
     ];
 
     public function audit(): BelongsTo

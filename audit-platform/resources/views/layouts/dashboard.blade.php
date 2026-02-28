@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>@yield('title','Dashboard') — Inovex Audit</title>
+<title>@yield('title','Dashboard') — NOVIN.RO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -296,13 +296,24 @@ body.sb-open .sidebar { transform: translateX(0); box-shadow: var(--shadow-lg); 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
     <a href="{{ route('dashboard') }}" class="sb-logo">
-        <div class="sb-logo-icon">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
-        </div>
+        @if(file_exists(public_path('images/logo.png')))
+            <img src="{{ asset('images/logo.png') }}" alt="NOVIN.RO" style="height:32px;width:auto;display:block;filter:brightness(0) invert(1);opacity:.9;">
+        @elseif(file_exists(public_path('images/logo.svg')))
+            <img src="{{ asset('images/logo.svg') }}" alt="NOVIN.RO" style="height:32px;width:auto;display:block;filter:brightness(0) invert(1);opacity:.9;">
+        @endif
         <div>
-            <div class="sb-logo-name">Inovex Audit</div>
-            <div class="sb-logo-sub">powered by AI</div>
+            <div class="sb-logo-name">NOVIN.RO</div>
+            <div class="sb-logo-sub">powered by Inovex.ro</div>
         </div>
+        @if(false)
+            <div class="sb-logo-icon">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+            </div>
+            <div>
+                <div class="sb-logo-name">NOVIN.RO</div>
+                <div class="sb-logo-sub">powered by Inovex.ro</div>
+            </div>
+        @endif
     </a>
 
     <nav class="sb-nav">
@@ -321,6 +332,18 @@ body.sb-open .sidebar { transform: translateX(0); box-shadow: var(--shadow-lg); 
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             Setari cont
         </a>
+
+        @if(Auth::user()->is_admin)
+        <div class="sb-sec" style="margin-top:6px">Administrare</div>
+        <a href="{{ route('admin.index') }}" class="sb-link {{ request()->routeIs('admin.*') ? 'active' : '' }}"
+           style="{{ request()->routeIs('admin.*') ? '' : 'color:rgba(255,180,0,.75)' }}">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Admin Panel
+            @if(!request()->routeIs('admin.*'))
+            <span style="margin-left:auto;font-size:9px;font-weight:700;background:rgba(255,180,0,.15);color:rgba(255,180,0,.9);border:1px solid rgba(255,180,0,.2);padding:1px 5px;border-radius:3px;">ADMIN</span>
+            @endif
+        </a>
+        @endif
     </nav>
 
     <div class="sb-footer">
